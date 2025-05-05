@@ -8,29 +8,33 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import prettier from 'eslint-plugin-prettier';
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+export default [
+  // Use Next.js config as base
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  
+  // JS/TS base config
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended, 'plugin:prettier/recommended'],
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       globals: {
         ...globals.browser,
         React: 'readonly',
+        JSX: 'readonly',
       },
       parser: tseslint.parser,
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
+        project: './tsconfig.json',
       },
     },
     plugins: {
@@ -44,10 +48,9 @@ const eslintConfig = [
       },
     },
     rules: {
+      // React specific rules
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-       // Depend only on .prettierrc
-
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
       'react/prop-types': 'off',
@@ -62,6 +65,7 @@ const eslintConfig = [
       'react/no-unstable-nested-components': ['error', { allowAsProps: false }],
       'react/jsx-no-leaked-render': ['error', { validStrategies: ['ternary'] }],
 
+      // TypeScript specific rules
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
@@ -70,8 +74,37 @@ const eslintConfig = [
         },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      }],
+      
+      // Additional rules for better code quality
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'eqeqeq': ['error', 'always'],
+      'curly': ['error', 'all'],
+      
+      // Prettier integration
+      'prettier/prettier': 'error',
     },
-  }
-]; 
-export default eslintConfig;
+  },
+  
+  // Vite-specific config
+  {
+    files: ['vite.config.ts'],
+    rules: {
+      'import/no-default-export': 'off',
+    },
+  },
+  
+  // Test files
+  {
+    files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-console': 'off',
+    },
+  },
+];

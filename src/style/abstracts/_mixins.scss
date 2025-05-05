@@ -1,0 +1,50 @@
+@mixin p($value) {
+    padding: $value;
+  }
+  
+  @mixin px($value) {
+    padding-left: $value;
+    padding-right: $value;
+  }
+  
+  @mixin py($value) {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+  
+  @mixin m($value) {
+    margin: $value;
+  }
+  
+  @mixin mx($value) {
+    margin-left: $value;
+    margin-right: $value;
+  }
+  
+  @mixin my($value) {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+  
+  // Flexbox
+  @mixin flex($direction: row, $wrap: nowrap, $justify: flex-start, $align: stretch) {
+    display: flex;
+    flex-direction: $direction;
+    flex-wrap: $wrap;
+    justify-content: $justify;
+    align-items: $align;
+  }
+  
+  // Grid
+  @mixin grid($cols: 1, $gap: 0) {
+    display: grid;
+    grid-template-columns: repeat($cols, 1fr);
+    gap: $gap;
+  }
+  
+  // Typography
+  @mixin text($size, $weight: normal, $line-height: normal) {
+    font-size: $size;
+    font-weight: $weight;
+    line-height: $line-height;
+  }
