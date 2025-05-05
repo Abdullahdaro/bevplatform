@@ -1,7 +1,6 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
 import * as tseslint from 'typescript-eslint';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -16,12 +15,12 @@ const compat = new FlatCompat({
 
 export default [
   // Use Next.js config as base
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  
+  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+
   // JS/TS base config
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    ignores: ['postcss.config.js', 'tailwind.config.js', 'tsconfig.json', 'next.config.js'],
     languageOptions: {
       ecmaVersion: 2022,
       globals: {
@@ -74,23 +73,26 @@ export default [
         },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', { 
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      }],
-      
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
+
       // Additional rules for better code quality
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
-      'eqeqeq': ['error', 'always'],
-      'curly': ['error', 'all'],
-      
+      eqeqeq: ['error', 'always'],
+      curly: ['error', 'all'],
+
       // Prettier integration
       'prettier/prettier': 'error',
     },
   },
-  
+
   // Vite-specific config
   {
     files: ['vite.config.ts'],
@@ -98,7 +100,7 @@ export default [
       'import/no-default-export': 'off',
     },
   },
-  
+
   // Test files
   {
     files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],
